@@ -12,6 +12,7 @@ $(NAME): all
 
 all: $(SRC)
 	stack install wolfram:exe:wolfram-exe --local-bin-path '.'
+	mv wolfram-exe wolfram -f
 
 tests_run:
 	stack install wolfram:test:wolfram-test --local-bin-path '.'

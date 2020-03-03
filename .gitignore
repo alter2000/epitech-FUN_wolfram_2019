@@ -1,6 +1,7 @@
 .stack-work/
 wolfram.cabal
 wolfram
+wolfram-exe
 TAGS
 stack.yaml.lock
 *~

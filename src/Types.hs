@@ -13,6 +13,7 @@ data Opts = Opts
   { rule   :: !WRule
   , start  :: !PeanoNum
   , lines  :: !PeanoNum
+  -- , lines  :: !(Maybe PeanoNum)  -- maybe none or 0?
   , window :: !PeanoNum
   , move   :: !Integer
   } deriving (Show, Read)
