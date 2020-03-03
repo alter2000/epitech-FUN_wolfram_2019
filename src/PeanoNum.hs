@@ -37,6 +37,7 @@ instance Num PeanoNum where
   n * (S Z) = n
   (S n1) * (S n2) = S . S $ n1 * n2
 
-  abs    = id
+  abs = id
+
   signum = error "PNat is never negative"
   negate = error "PNat is never negative"
