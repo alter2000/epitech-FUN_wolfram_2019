@@ -19,7 +19,7 @@ parse :: [String] -> Either String Opts
 parse sss = case runParser of
   [(opts, "")] -> Right opts
   [] -> Left "Error parsing arguments."
-  ss@((_, s):_)  -> Left . (++) "Ambiguous parse: " $ show ss
+  ((_, s):_)  -> Left . (++) "Ambiguous parse: " $ show s
   where
     runParser = readP_to_S parseOpts $ unwords sss
 
@@ -46,9 +46,6 @@ parseWindow = numOpt "window" <++ pure 0
 parseMove :: Parsed Integer
 parseMove = numOpt "move" <++ pure 0
 
-except :: String -> IO a
-except a = hPutStrLn stderr a >> exitWith (ExitFailure 84)
-
 opt :: String -> Parsed String
 opt s = string $ "--" ++ s
 
@@ -66,3 +63,6 @@ numOpt s = skipSpaces
         *> opt s
         *> skipSpaces
         *> (read <$> munch1 isDigit)
+
+except :: String -> IO a
+except a = hPutStrLn stderr a >> exitWith (ExitFailure 84)
