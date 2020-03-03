@@ -14,7 +14,7 @@ toNat n = S . toNat $ n - 1
 
 fromNat :: Integral a => PeanoNum -> a
 fromNat Z = 0
-fromNat (S n) = 1 + (fromNat n)
+fromNat (S n) = 1 + fromNat n
 
 instance Read PeanoNum where
   readsPrec _ ('-':_) = fail ""
@@ -29,7 +29,9 @@ instance Num PeanoNum where
   S n1 + S n2 = S . S $ n1 + n2
 
   fromInteger 0 = Z
-  fromInteger i | i > 0 = S . fromInteger $ i - 1
+  fromInteger i
+    | i > 0 = S . fromInteger $ i - 1
+    | otherwise = error "PeanoNum.fromInteger: positive numbers only."
 
   Z * _ = Z
   _ * Z = Z

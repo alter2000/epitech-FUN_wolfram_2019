@@ -6,20 +6,22 @@ module Parsing
 
 import Types
 
--- import Control.Monad.ST
-import Data.List ( intercalate )
 import System.IO ( hPutStrLn, stderr )
 import System.Exit ( exitWith, ExitCode (..) )
+import Control.Applicative
+-- import Control.Monad.ST => StateT primitive => generalized ReadP
 import Text.ParserCombinators.ReadP
 
 -- typedef-ish
 type Parsed = ReadP
 
 parse :: [String] -> Either String Opts
-parse sss = case readP_to_S parseOpts $ intercalate " " sss of
+parse sss = case runParser of
   [(opts, "")] -> Right opts
   [] -> Left "Error parsing arguments."
-  [(_, s)]  -> Left . (++) "Ambiguous parse: " $ show s
+  ss@((_, s):_)  -> Left . (++) "Ambiguous parse: " $ show ss
+  where
+    runParser = readP_to_S parseOpts $ unwords sss
 
 parseOpts :: Parsed Opts
 parseOpts = Opts
@@ -52,16 +54,15 @@ opt s = string $ "--" ++ s
 
 digit, space :: ReadP Char
 digit = satisfy isDigit
--- not all whitespace
 space = satisfy isSpace
 
 isDigit, isSpace :: Char -> Bool
+-- not all whitespace
 isSpace c = c == ' ' || c == '\t'
 isDigit c = c >= '0' && c <= '9'
 
 numOpt :: Read a => String -> Parsed a
-numOpt s = do
-  skipSpaces
-  opt s
-  skipSpaces
-  read <$> munch1 isDigit
+numOpt s = skipSpaces
+        *> opt s
+        *> skipSpaces
+        *> (read <$> munch1 isDigit)

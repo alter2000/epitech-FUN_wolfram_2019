@@ -4,4 +4,4 @@ module Logic
       where
 
 calc :: Show a => a -> IO ()
-calc = putStrLn . show
+calc = print
