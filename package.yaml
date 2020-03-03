@@ -46,3 +46,10 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - wolfram
+
+default-extensions:
+  - DataKinds
+  - KindSignatures
+  - ScopedTypeVariables
+  - ViewPatterns
+  - FlexibleInstances
