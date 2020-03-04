@@ -39,6 +39,8 @@ step _ (Cycle _ _ _ []) = error "ComonadList.step: infinite list not infinite?"
 runCA :: (t -> t -> t -> t) -> Cycle t -> [Cycle t]
 runCA r = iterate (=>> step r)
 
+-- TODO: shift window 1 cell left
+
 printAll :: (Eq a, Num a) => Int -> (a -> a -> a -> a) -> Cycle a -> IO ()
 printAll n r st = mapM_ putStrLn $ take n result
   where result = fmap display . view <$> runCA r st
