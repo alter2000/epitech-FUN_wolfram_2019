@@ -1,5 +1,6 @@
 module PeanoNum (
-    PeanoNum -- no constructors, transparent Nums
+  -- no constructors, transparent Nums
+    PeanoNum
   , toNat
   , fromNat
   ) where
@@ -10,7 +11,9 @@ data PeanoNum = Z | S PeanoNum
 
 toNat :: Integral a => a -> PeanoNum
 toNat 0 = Z
-toNat n = S . toNat $ n - 1
+toNat n
+  | n < 0     = error "cannot happen lol"
+  | otherwise = S . toNat $ n - 1
 
 fromNat :: (Integral a, Num a, Eq a) => PeanoNum -> a
 fromNat Z = 0

@@ -8,8 +8,8 @@ import Types
 
 import System.IO ( hPutStrLn, stderr )
 import System.Exit ( exitWith, ExitCode (..) )
-import Control.Applicative
 -- import Control.Monad.ST => StateT primitive => generalized ReadP
+-- Control.Applicative reexported from ReadP
 import Text.ParserCombinators.ReadP
 
 -- typedef-ish

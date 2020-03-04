@@ -1,5 +1,8 @@
 module Logic
     ( calc
+    , printAll
+    , rule
+    , initial
     )
       where
 
@@ -13,12 +16,11 @@ import Types hiding ( rule
 import PeanoNum ( fromNat )
 
 calc :: Opts -> IO ()
-calc (Opts ruleNo start lines window move) =
-  printAll
-    (fromNat lines)
-    (rule $ fromNat ruleNo)
-    (initial
-      (fromNat window) [1])
+calc (Opts ruleNo start ls window move) =
+  printAll (fromNat ls)
+           (rule $ fromNat ruleNo)
+           (initial
+             (fromNat window) [1])
 
 initial :: Num a => Int -> [a] -> Cycle a
 initial n lst = fromList $ center $ padRight n lst
@@ -32,7 +34,7 @@ rule n l x r = n `div` (2^(4*l + 2*x + r)) `mod` 2
 
 step :: (a -> a -> a -> b) -> Cycle a -> b
 step f (Cycle _ l x (r:_)) = f l x r
--- step _ (Cycle _ _ _ []) = error "ComonadList.step: infinite list not infinite?"
+step _ (Cycle _ _ _ []) = error "ComonadList.step: infinite list not infinite?"
 
 runCA :: (t -> t -> t -> t) -> Cycle t -> [Cycle t]
 runCA r = iterate (=>> step r)

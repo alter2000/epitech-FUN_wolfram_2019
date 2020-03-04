@@ -32,7 +32,7 @@ instance Comonad Cycle where
   duplicate x@(Cycle n _ _ _) = fromList $ take n $ iterate shift x
     where
       shift (Cycle a _ b (r:rs)) = Cycle a b r rs
-      -- shift (Cycle _ _ _ []) = error "ComonadList.shift: infinite list not infinite?"
+      shift (Cycle _ _ _ []) = error "ComonadList.shift: infinite list not infinite?"
 
 view :: Cycle a -> [a]
 view (Cycle n _ x r) = take n (x:r)
