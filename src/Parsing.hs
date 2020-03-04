@@ -8,7 +8,7 @@ import Types
 
 import System.IO ( hPutStrLn, stderr )
 import System.Exit ( exitWith, ExitCode (..) )
--- import Control.Monad.ST => StateT primitive => generalized ReadP
+-- import Control.Monad.ST :-> StateT primitive => generalized ReadP
 -- Control.Applicative reexported from ReadP
 import Text.ParserCombinators.ReadP
 
@@ -41,7 +41,7 @@ parseLines :: Parsed PeanoNum
 parseLines = numOpt "lines" <++ pure 0
 
 parseWindow :: Parsed PeanoNum
-parseWindow = numOpt "window" <++ pure 0
+parseWindow = numOpt "window" <++ pure 80
 
 parseMove :: Parsed Integer
 parseMove = numOpt "move" <++ pure 0
