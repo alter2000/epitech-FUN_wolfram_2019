@@ -12,7 +12,7 @@ toNat :: Integral a => a -> PeanoNum
 toNat 0 = Z
 toNat n = S . toNat $ n - 1
 
-fromNat :: Integral a => PeanoNum -> a
+fromNat :: (Integral a, Num a, Eq a) => PeanoNum -> a
 fromNat Z = 0
 fromNat (S n) = 1 + fromNat n
 

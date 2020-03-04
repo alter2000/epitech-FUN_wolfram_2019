@@ -31,7 +31,7 @@ parseOpts = Opts
   <*> parseWindow
   <*> parseMove
 
-parseRule :: Parsed WRule
+parseRule :: Parsed PeanoNum
 parseRule = numOpt "rule"
 
 parseStart :: Parsed PeanoNum
