@@ -26,7 +26,8 @@ initial :: Num a => Int -> [a] -> Cycle a
 initial n lst = fromList $ center $ padRight n lst
   where
     padRight f xs = take f $ xs ++ repeat 0
-    center = take n . drop (n `div` 2+1) . cycle
+    -- TODO: what is the center?
+    center = take n . drop (n `div` 2+2) . cycle
 
 -- black magic rule definition
 rule :: (Integral a, Integral b) => a -> b -> b -> b -> a
@@ -38,8 +39,6 @@ step _ (Cycle _ _ _ []) = error "ComonadList.step: infinite list not infinite?"
 
 runCA :: (t -> t -> t -> t) -> Cycle t -> [Cycle t]
 runCA r = iterate (=>> step r)
-
--- TODO: shift window 1 cell left
 
 printAll :: (Eq a, Num a) => Int -> (a -> a -> a -> a) -> Cycle a -> IO ()
 printAll n r st = mapM_ putStrLn $ take n result
