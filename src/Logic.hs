@@ -20,14 +20,16 @@ calc (Opts ruleNo start ls window move) =
   printAll (fromNat ls)
            (rule $ fromNat ruleNo)
            (initial
-             (fromNat window) [1])
+             (fromNat window) [1]
+             (fromInteger move)
+             (fromNat start))
 
-initial :: Num a => Int -> [a] -> Cycle a
-initial n lst = fromList $ center $ padRight n lst
+initial :: Num a => Int -> [a] -> Int -> Int -> Cycle a
+initial n lst w s = fromList $ drop s $ center $ padRight n lst
   where
     padRight f xs = take f $ xs ++ repeat 0
     -- TODO: what is the center?
-    center = take n . drop (n `div` 2+2) . cycle
+    center = take n . drop (n `div` 2+w) . cycle
 
 -- black magic rule definition
 rule :: (Integral a, Integral b) => a -> b -> b -> b -> a
