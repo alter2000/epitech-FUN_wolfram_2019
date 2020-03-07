@@ -29,7 +29,7 @@ initial n lst w s = fromList $ drop s $ center $ padRight n lst
   where
     padRight f xs = take f $ xs ++ repeat 0
     -- TODO: what is the center?
-    center = take n . drop (n `div` 2+w) . cycle
+    center = take n . drop (n `div` 2-w) . cycle
 
 -- black magic rule definition
 rule :: (Integral a, Integral b) => a -> b -> b -> b -> a
@@ -43,8 +43,12 @@ runCA :: (t -> t -> t -> t) -> Cycle t -> [Cycle t]
 runCA r = iterate (=>> step r)
 
 printAll :: (Eq a, Num a) => Int -> (a -> a -> a -> a) -> Cycle a -> IO ()
+printAll 0 r st = mapM_ putStrLn result
+  where result = fmap display . view <$> runCA r st
 printAll n r st = mapM_ putStrLn $ take n result
   where result = fmap display . view <$> runCA r st
-        display 0 = ' '
-        display 1 = '*'
-        display _ = '\0'
+
+display :: (Eq a, Num a) => a -> Char
+display 0 = ' '
+display 1 = '*'
+display _ = '\0'
