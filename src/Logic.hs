@@ -1,8 +1,5 @@
 module Logic
     ( calc
-    , printAll
-    , rule
-    , initial
     )
       where
 
@@ -14,22 +11,27 @@ import Types hiding ( rule
                     , move
                     )
 import PeanoNum ( fromNat )
+import Data.Function ((&))
 
 calc :: Opts -> IO ()
 calc (Opts ruleNo start ls window move) =
-  printAll (fromNat ls)
+  printAll ls
+            start
            (rule $ fromNat ruleNo)
            (initial
              (fromNat window) [1]
-             (fromInteger move)
-             (fromNat start))
+             (fromInteger move))
 
-initial :: Num a => Int -> [a] -> Int -> Int -> Cycle a
-initial n lst w s = fromList $ drop s $ center $ padRight n lst
-  where
-    padRight f xs = take f $ xs ++ repeat 0
-    -- TODO: what is the center?
-    center = take n . drop (n `div` 2-w) . cycle
+initial :: Num a => PeanoNum -> [a] -> Int -> Cycle a
+initial n lst w = padRight n lst
+                & center n w
+                & fromList
+
+padRight :: Num a => PeanoNum -> [a] -> [a]
+padRight f xs = take (fromNat f) $ xs ++ repeat 0
+-- TODO: what is the center?
+center :: PeanoNum -> Int -> [a] -> [a]
+center n w = take (fromNat n) . drop ((fromNat n) `div` 2 - w) . cycle
 
 -- black magic rule definition
 rule :: (Integral a, Integral b) => a -> b -> b -> b -> a
@@ -42,13 +44,27 @@ step _ (Cycle _ _ _ []) = error "ComonadList.step: infinite list not infinite?"
 runCA :: (t -> t -> t -> t) -> Cycle t -> [Cycle t]
 runCA r = iterate (=>> step r)
 
-printAll :: (Eq a, Num a) => Int -> (a -> a -> a -> a) -> Cycle a -> IO ()
-printAll 0 r st = mapM_ putStrLn result
-  where result = fmap display . view <$> runCA r st
-printAll n r st = mapM_ putStrLn $ take n result
-  where result = fmap display . view <$> runCA r st
+printAll :: (Eq a, Num a) =>
+            PeanoNum
+         -> PeanoNum
+         -> (a -> a -> a -> a)
+         -> ComonadList.Cycle a
+         -> IO ()
+printAll n b r seed = result
+                    & chop n b
+                    & mapM_ putStrLn
+  where
+    chop :: PeanoNum -> PeanoNum -> [a] -> [a]
+    chop 0 b = yeet b
+    chop n b = take (fromNat n) . yeet b
 
-display :: (Eq a, Num a) => a -> Char
-display 0 = ' '
-display 1 = '*'
-display _ = '\0'
+    yeet :: PeanoNum -> [a] -> [a]
+    yeet n = drop (fromNat n)
+
+    result :: [[Char]]
+    result = fmap display . view <$> runCA r seed
+
+    display :: (Eq a, Num a) => a -> Char
+    display 0 = ' '
+    display 1 = '*'
+    display _ = '\0'
