@@ -26,8 +26,8 @@ parse sss = case runParser of
 parseOpts :: Parsed Opts
 parseOpts = Opts
   <$> parseRule
-  <*> parseLines
   <*> parseStart
+  <*> parseLines
   <*> parseWindow
   <*> parseMove
 
