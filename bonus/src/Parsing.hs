@@ -23,6 +23,9 @@ parse sss = case runParser of
   where
     runParser = readP_to_S parseOpts $ unwords sss
 
+allowedRules :: [PeanoNum]
+allowedRules = [0..255]
+
 parseOpts :: Parsed Opts
 parseOpts = Opts
   <$> parseRule
@@ -33,7 +36,11 @@ parseOpts = Opts
   <*> parseImg
 
 parseRule :: Parsed PeanoNum
-parseRule = numOpt "rule"
+parseRule = do
+  n <- numOpt "rule"
+  if n `elem` allowedRules
+     then return n
+     else fail "rule number not in allowed ruleset"
 
 parseStart :: Parsed PeanoNum
 parseStart = numOpt "start" <++ pure 0
